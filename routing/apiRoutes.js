@@ -6,6 +6,11 @@ module.exports = (app) => {
     });
 
     app.post('/api/friends', (req, res) => {
-
+        if(friendList.length > 0){
+            friendList.push(req.body);
+            res.json(friendList[0]);
+        }else{
+            res.json(false);
+        }
     });
 };
