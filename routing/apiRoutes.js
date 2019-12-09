@@ -6,11 +6,26 @@ module.exports = (app) => {
     });
 
     app.post('/api/friends', (req, res) => {
-        if(friendList.length > 0){
-            friendList.push(req.body);
-            res.json(friendList[0]);
-        }else{
-            res.json(false);
-        }
+            newFriend = req.body;
+            var bestFit = calcDifferences(newFriend);
+            friendList.push(newFriend);
+            res.json(friendList[bestFit]);
     });
 };
+
+function calcDifferences(newFriend){
+    var friendsDifference = [];
+    var diff = 0;
+    for(var friend of friendList){
+        for(var i = 0; i < 10; i++){
+            if(i < 9){
+                diff = diff += Math.abs(parseInt(friend.scores[i]) - parseInt(newFriend.scores[i]));
+            }else{
+                friendsDifference.push(diff);
+                diff = 0;
+            }
+        }
+    }
+    var index = friendsDifference.indexOf(Math.min.apply(null, friendsDifference));
+    return index;
+}
